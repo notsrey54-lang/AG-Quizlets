@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AG Quizlet - المرجع الرسمي</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stc: {
+                            purple: '#4F008C',
+                            light: '#6c22a6',
+                            orange: '#FF4B00'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+        }
+
+        /* Luxury Color Overrides */
+        .text-stc-purple { color: #D4AF37 !important; }
+        .bg-stc-purple { background-color: #0A0E23 !important; }
+        .from-stc-purple { --tw-gradient-from: #0A0E23 !important; }
+        .to-stc-light { --tw-gradient-to: #162345 !important; }
+        .from-stc-light { --tw-gradient-from: #162345 !important; }
+        .to-stc-purple { --tw-gradient-to: #D4AF37 !important; }
+        .border-stc-purple { border-color: #D4AF37 !important; }
+        
+        /* Card Hover Effects */
+        .q-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .q-card:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px -3px rgba(212, 175, 55, 0.25) !important; 
+            border-color: #D4AF37 !important; 
+        }
+        .bg-purple-50 { background-color: #f5f0e8 !important; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Smooth fade in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-lg sticky top-0 z-50 border-t-4 border-stc-purple">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div class="ag-logo" style="width:3.5rem;height:3.5rem;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#b48d49,#e6c98b);border-radius:0.75rem;box-shadow:0 4px 6px rgba(0,0,0,0.25);font-family:Georgia,serif;font-weight:700;font-size:1.75rem;color:#ffffff;">
+                        AG
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-extrabold text-stc-purple tracking-tight">AG Quizlet</h1>
+                        <p id="version-tagline" class="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-0.5 rounded-full inline-block mt-1">نسخة مايو 2026</p>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="w-full md:max-w-md relative group">
+                    <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-search text-slate-400 group-focus-within:text-stc-purple transition-colors"></i>
+                    </div>
+                    <input type="text" id="searchInput" class="block w-full pr-11 pl-4 py-3.5 border border-slate-200 rounded-2xl leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-stc-purple/20 focus:border-stc-purple transition-all duration-200 shadow-sm" placeholder="ابحث عن باقة، كود، أو سؤال...">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                        <span id="count-badge" class="bg-stc-purple text-white text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">93</span>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button onclick="downloadApp()" class="w-full md:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-stc-purple to-stc-light hover:from-stc-light hover:to-stc-purple text-white px-6 py-3 rounded-xl transition-all shadow-md hover:shadow-lg font-bold text-sm transform active:scale-95">
+                    <i class="fa-solid fa-cloud-arrow-down text-lg"></i>
+                    <span>حفظ التطبيق</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="bg-white border-b border-slate-100 py-3">
+        <div class="max-w-7xl mx-auto px-4 flex justify-around md:justify-start md:gap-12 text-center md:text-right">
+            <div>
+                <span class="text-xs text-slate-400 block font-bold">الحالة</span>
+                <span class="text-sm font-bold text-emerald-600 flex items-center gap-1"><i class="fa-solid fa-circle-check text-[10px]"></i> محدث بالكامل</span>
+            </div>
+            <div>
+                <span class="text-xs text-slate-400 block font-bold">المشروع</span>
+                <span class="text-sm font-bold text-stc-purple">AG KW</span>
+            </div>
+            <div>
+                <span class="text-xs text-slate-400 block font-bold">المطور</span>
+                <span class="text-sm font-bold text-slate-700">Antoine</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <!-- Motivational Quote -->
+        <div class="bg-slate-100 rounded-2xl p-4 mb-6 shadow-inner flex justify-center items-center">
+            <p class="text-center text-lg md:text-xl font-medium italic text-stc-purple">Stay calm, stay focused, and trust your prep</p>
+        </div>
+
+        <!-- Dynamic Grid Container -->
+        <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="flex-col items-center justify-center py-20 text-center animate-fade-in hidden">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6 text-slate-300 text-3xl ring-4 ring-white shadow-sm">
+                <i class="fa-solid fa-magnifying-glass-location"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-700">لا توجد نتائج</h3>
+            <p class="text-slate-500 mt-2 max-w-xs mx-auto text-sm">لم نتمكن من العثور على ما تبحث عنه. جرب كلمات أخرى مثل "باقة" أو "كود".</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4 opacity-50">
+                <i class="fa-solid fa-project-diagram text-stc-purple"></i>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">تم التصميم لسهولة الوصول عبر الموبايل واللابتوب</p>
+        </div>
+    </footer>
+
+    <script>
+        const quizData = [
+            {id: 1, q: "ماذا تظهر حالة 'In progress' في نظام BSS؟", a: "المعاملة جارية"},
+            {id: 2, q: "ماذا يحصل عند استخدام كامل سعة الإنترنت في خدمة 'خليك ON'؟", a: "يتم تقليل السرعة إلى 256 كيلوبت"},
+            {id: 3, q: "ما هو رمز إلغاء الاشتراك الموحد الجديد لباقات الدفع المسبق؟", a: "إرسال ( D ) إلى (510)"},
+            {id: 4, q: "في نظام BSS، كيف يستطيع الموظف مشاهدة تاريخ المعاملات؟", a: "عن طريق خانة (Requests)"},
+            {id: 5, q: "في نظام BSS، يستطيع العميل الدفع عن طريق:", a: "Cash / Debit / Credit"},
+            {id: 6, q: "في تكلفة عقد الإنهاء في خانة نظرة عامة تعني (BSS System):", a: "جميع ما سبق"},
+            {id: 7, q: "مع خط الهاتف للدفع الآجل الصوتية بقيمة 16 دينار كويتي، يمكن للعميل استخدام 1000 دقيقة:", a: "المحلية"},
+            {id: 8, q: "ما هي متطلبات تقديم مطالبة Device Care؟", a: "كل ما سبق (مدنية + عقد)"},
+            {id: 9, q: "فيما يتعلق ببرنامج Trade In، لا يتم تضمين أحد الشروط التالية في تقييم الجهاز:", a: "الحاجة إلى علبة وشاحن"},
+            {id: 10, q: "يمكن للعملاء اللذين لديهم باقة تميز 100 د.ك للدفع الآجل الصوتي استخدام إنترنت التجوال بسعة:", a: "150 GB"},
+            {id: 11, q: "تشمل ميزات Home Pass الأساسية لخدمة Plume Mesh ما يلي:", a: "إدارة خصوصية البيانات"},
+            {id: 12, q: "ماذا توضح خانة 'Age on Network' في نظام BSS؟", a: "Connection date"},
+            {id: 13, q: "العروض الترويجية والإعلامية في نظرة عامة على BSS تظهر بناءً على:", a: "حسب أهلية العميل"},
+            {id: 14, q: "سعر استخدام الرسائل المحلية في باقات الدفع الآجل (خارج الباقة) هو:", a: "20 فلس / للرسالة"},
+            {id: 15, q: "في باقة 25 د.ك خليك-ON صوتية، يحصل العميل على كم رسالة محلية؟", a: "1000 رسالة"},
+            {id: 16, q: "في باقة 35 د.ك خليك-ON صوتية، يحصل العميل على كم رسالة محلية؟", a: "1000 رسالة"},
+            {id: 17, q: "توفر باقة التميز 75 دينار للدفع الآجل كم رسالة محلية؟", a: "2000 رسالة محلية"},
+            {id: 18, q: "ما هي رسوم باقة التجوال الخاصة (7 أيام) بين السعودية والبحرين؟", a: "KD 8"},
+            {id: 19, q: "في باقة التجوال المميزة بقيمة 12 د.ك يحصل العميل على رسائل تجوال:", a: "SMS 30"},
+            {id: 20, q: "يتم تفعيل باقة 12 د.ك المميزة للتجوال عبر إرسال كود:", a: "p1 to 102"},
+            {id: 21, q: "بأي توقيت تُحسب صلاحية باقات التجوال؟", a: "توقيت دولة الكويت المحلي"},
+            {id: 22, q: "مدة الانتظار المسموحة؟", a: "لا يتعدى 30 ثانية"},
+            {id: 23, q: "لإلغاء خدمة الـ Budget Control نستخدم الرمز:", a: "#550#"},
+            {id: 24, q: "عند التسجيل في برنامج قطاف بخط دفع آجل، يحصل العميل على نقاط ترحيبية:", a: "30 نقطة"},
+            {id: 25, q: "صلاحية النقاط في برنامج قطاف هي:", a: "12 شهر"},
+            {id: 26, q: "كم تبلغ تكلفة الدقيقة المحلية في باقات الدفع الآجل الصوتية؟", a: "39 فلس"},
+            {id: 27, q: "ماهي المدة من انتقال MEDIUM-risk إلى Low-risk profile؟", a: "شهر واحد"},
+            {id: 28, q: "أي من التطبيقات التالية غير مشمول في سعة التواصل الاجتماعي المجانية؟", a: "زوم (Zoom)"},
+            {id: 29, q: "أين تتم عملية نقل ملكية الخط (دفع آجل أو مسبق صوتي)؟", a: "من خلال زيارة الفرع"},
+            {id: 30, q: "في حال وفاة صاحب الخط، ما الإجراء المطلوب؟", a: "مراجعة ذوي المتوفى للفرع"},
+            {id: 31, q: "عميل مهتم بالصحة واللياقة البدنية، ما المنتج الأنسب له؟", a: "ساعة آبل"},
+            {id: 32, q: "عميل من فئة الأعمال يريد رقماً مميزاً، ما هو الخيار الأنسب؟", a: "رقم سوبر gold / بلاتيني"},
+            {id: 33, q: "كم دقيقة محلية في باقة go المسبقة الأسبوعية بقيمة 6 د.ك؟", a: "100 دقيقة"},
+            {id: 34, q: "كيف يستعلم عميل الدفع الآجل عن استهلاكه للإنترنت؟", a: "إرسال الكود Q إلى 567"},
+            {id: 35, q: "باقة التجوال المميزة بقيمة 12 د.ك تتيح للعميل استخدام...دقائق للاتصال بالكويت:", a: "30 دقيقة"},
+            {id: 36, q: "كيف يتم عملية اعادة التعبئة لخطوط دفع المسبق من خلال نظام ال BSS؟", a: "Service Request button / Recharge"},
+            {id: 37, q: "ما هي سعة الانترنت المتاحة للتجوال الخاص بين السعودية والبحرين (ليوم واحد)؟", a: "3GB"},
+            {id: 38, q: "وظيفة جهاز Plume Mesh هي:", a: "توسيع نطاق تغطية WI-FI لاجهزة Router"},
+            {id: 39, q: "ماذا تعني كلمة Upfront charges؟", a: "دفعة مقدمة"},
+            {id: 40, q: "استخدام الإنترنت الليلي (150GB) في باقات go للدفع المسبق هو من:", a: "من 1 صباحاً إلى 7 صباحاً"},
+            {id: 41, q: "في باقة 16 د.ك للدفع الآجل للإنترنت، سعة الاستخدام الشهرية هي:", a: "10 TB"},
+            {id: 42, q: "بعد استهلاك السعة المجانية لباقة 16 د.ك آجل تنخفض السرعة إلى:", a: "256 Kbps"},
+            {id: 43, q: "سياسة الاستخدام العادل في باقة 12 KD للدفع الآجل للإنترنت هي:", a: "2TB"},
+            {id: 44, q: "هل تتوفر خطة مشاركة الشريحة مع خط الإنترنت الدفع الآجل بقيمة 12 د.ك؟", a: "لا"},
+            {id: 45, q: "عميل يسافر كثيراً ويريد البقاء متصلاً، ما الخدمة الأنسب؟", a: "باقة بيانات تجوال"},
+            {id: 46, q: "هل يمكن التجديد التلقائي في باقة التجوال المميزة بقيمة 12 د.ك؟", a: "نعم"},
+            {id: 47, q: "كم عدد الأجهزة التي يمكن إضافتها مع باقات الإنترنت؟", a: "2"},
+            {id: 48, q: "مدة الالتزام لإضافة أجهزة لعملاء إنترنت الدفع الآجل الجديد:", a: "24 شهر"},
+            {id: 49, q: "يستطيع العميل استخدام أكثر من جهاز واحد في عملية Trade In:", a: "صح"},
+            {id: 50, q: "في باقة الدفع الآجل 25 د.ك، يحصل العميل على دقائق محلية:", a: "2000 دقيقة"},
+            {id: 51, q: "أي باقة خليك-ON توفر دقائق غير محدودة؟", a: "KD 35"},
+            {id: 52, q: "تتوفر باقة الدفع الآجل 35 د.ك إنترنت محلي بسعة:", a: "500GB"},
+            {id: 53, q: "ما هو نوع الاجهزة المسموح بها عمل Trade in؟", a: "الهاتف المحمول / الجهاز اللوحي"},
+            {id: 54, q: "ما هي سعة الإنترنت في باقة الـ 25 الصوتية؟", a: "100 GB"},
+            {id: 55, q: "عميل خط التعبئة go القديم ينتقل لباقات الرسائل عبر كود:", a: "510"},
+            {id: 56, q: "عند رغبة العميل بدفع المبالغ المستحقة، ما هي الإجابة الخاطئة؟", a: "تحويل العميل للدعم الفني"},
+            {id: 57, q: "كم مدة الاستعداد للمكالمة؟", a: "أقل من 3 ثوان"},
+            {id: 58, q: "خيارات لا تتطلب توجيه العميل للفرع:", a: "الاستفسار عن الفاتورة"},
+            {id: 59, q: "يتم ترحيل الدقائق والرسائل غير المستخدمة للشهر التالي في الآجل؟", a: "خطأ"},
+            {id: 60, q: "الانترنت الاضافي المتاح في باقة الانترنت KD7 مسبق الدفع هو ل:", a: "3 KD"},
+            {id: 61, q: "باقة go المسبقة بقيمة 9 د.ك توفر دقائق وتواصل اجتماعي:", a: "صح (كل ما ذكر)"},
+            {id: 62, q: "تتوفر ميزة الـ Social Media بسعة 150GB مع خط 30/35 د.ك:", a: "خطأ"},
+            {id: 63, q: "يساعدنا شريط البحث في العثور على الملف الشخصي بواسطة (BSS):", a: "جميع ما سبق"},
+            {id: 64, q: "المنتج الأنسب للمهتم بالصحة والرياضة البدنية:", a: "ساعة آبل"},
+            {id: 65, q: "باقة التميز 50 د.ك للدفع الاجل الصوتي تحتوي على انترنت بسعة:", a: "6TB"},
+            {id: 66, q: "باقة التميز 90/100 د.ك للدفع الاجل الصوتي تحتوي على انترنت تجوال بسعة:", a: "150 GB"},
+            {id: 67, q: "ماهي المدة من انتقال High-risk إلى MEDIUM-risk profile؟", a: "3 اشهر"},
+            {id: 68, q: "رسوم الاتصال الى الكويت بالتجوال من اي دولة اوربية:", a: "KD 1.250"},
+            {id: 69, q: "لتغيير إعدادات الخصوصية في خدمة Plume، نستخدم ميزة:", a: "Home Pass"},
+            {id: 70, q: "سيحصل عملاء باقة 45 د.ك على (...) GB انترنت أثناء التجوال", a: "10GB"},
+            {id: 71, q: "قبل إجراء Trade in، يجب على الموظف أن يطلب من العميل ما يلي:", a: "عمل نسخة احتياطية من الجهاز القديم وحذف البيانات الشخصية"},
+            {id: 72, q: "ماذا يعني الاسم الكامل لـ VAS؟", a: "Value-added services"},
+            {id: 73, q: "ما هو نوع الاجهزة المسموح بها عمل Trade in؟", a: "الهاتف المحمول / الجهاز اللوحي"},
+            {id: 74, q: "عند التحقق من اسم الموظف الذي أجرى أي معاملة على الخط، فعلينا الانتقال إلى (BSS System):", a: "Requests"},
+            {id: 75, q: "يستطيع العميل ان يستخدم اكثر من جهاز واحد في عملية Trade-in:", a: "صح"},
+            {id: 76, q: "يحصل العملاء على كبل مجاني يصل طوله إلى ... متر مع باقة بيتي G5", a: "50 متر"},
+            {id: 77, q: "ما هي باقات Baity 5G التي تقدم شريحة SIM للمشاركة مجاناً؟", a: "KD 19"},
+            {id: 78, q: "هل تقدم باقات Baity 5G شريحة SIM للمشاركة مجاناً؟", a: "نعم"},
+            {id: 79, q: "يحصل عميل الدفع الاجل 45 د.ك مع التزام على:", a: "هاتف ذكي وراوتر"},
+            {id: 80, q: "قبل إجراء Trade in، يجب على الموظف أن يطلب من العميل ما يلي:", a: "عمل نسخة احتياطية من الجهاز القديم وحذف البيانات الشخصية"},
+            {id: 81, q: "خدمة الانترنت الاضافي لباقات الدفع الآجل الانترنت KD 5 تمنح العميل:", a: "GB 250"},
+            {id: 82, q: "سيتمكن العملاء الذين لديهم خط دفع الآجل للإنترنت الجديد من إضافة أجهزة بناءً على مدة التزام:", a: "24 شهر"},
+            {id: 83, q: "كم هي تكلفة خدمة الايقاف المؤقت لمدة شهر؟", a: "لا شيء من المذكور"},
+            {id: 84, q: "توفر خدمة Device Care Essential للعميل:", a: "تمديد لمصنعية الجهاز"},
+            {id: 85, q: "يمكن استخدام المبلغ المحصل عليه الذي تم الحصول عليه عن طريق Trade in من أجل:", a: "الفواتير المتأخرة"},
+            {id: 86, q: "كم عدد الرسائل المحلية المجانية المتوفرة على باقة 25 د.ك خلك ON للدفع الآجل الصوتية؟", a: "1000 رسالة"},
+            {id: 87, q: "في باقة 35 د.ك خلك ON، يحصل العميل على ... دقيقة محلية:", a: "دقائق غير محدودة"},
+            {id: 88, q: "ما هي تكلفة خدمة FOZ للألعاب الإضافية على باقات Baity 5G؟", a: "5KD"},
+            {id: 89, q: "كيف يمكن للعميل الاستفسار عن استخدام الإنترنت لخطوط الدفع الآجل؟", a: "ارسل كود Q الى رقم 567"},
+            {id: 90, q: "ما هي خيارات الاشتراك المتاحة لخدمات بيتي 5G؟", a: "سنتان / 3 سنوات /18 شهرا"},
+            {id: 91, q: "ما هي صلاحية خط بحالة ال grace؟", a: "30 يوم"},
+            {id: 92, q: "هل يحتوي جهاز الخارجي Baity5G (ODU) على بطاقة SIM؟", a: "نعم"},
+            {id: 93, q: "هل تتوفر شبكة 5G-advance في جميع مناطق الكويت؟", a: "لا"}
+        ];
+
+        const container = document.getElementById('results-container');
+        const searchInput = document.getElementById('searchInput');
+        const countBadge = document.getElementById('count-badge');
+        const emptyState = document.getElementById('empty-state');
+
+        function renderCards(items) {
+            container.innerHTML = '';
+            
+            if (items.length === 0) {
+                container.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                container.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+            }
+
+            countBadge.textContent = items.length;
+
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'q-card bg-white rounded-2xl p-6 border border-slate-100 flex flex-col justify-between h-full relative overflow-hidden group animate-fade-in';
+                card.style.animationDelay = `${Math.min(index * 30, 300)}ms`;
+                
+                card.innerHTML = `
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-lg text-xs font-bold text-stc-purple bg-purple-50 group-hover:bg-stc-purple group-hover:text-white transition-colors">
+                                <i class="fa-solid fa-hashtag ml-1"></i> ${item.id}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-6 leading-relaxed">${item.q}</h3>
+                    </div>
+                    
+                    <div class="relative z-10 mt-auto pt-4 border-t border-dashed border-slate-200">
+                        <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-2">الإجابة المعتمدة</div>
+                        <div class="bg-gradient-to-br from-slate-50 to-slate-100 p-3 rounded-xl border border-slate-100 text-stc-purple font-bold text-lg shadow-sm group-hover:from-purple-50 group-hover:to-white group-hover:border-purple-100 transition-all">
+                            ${item.a}
+                        </div>
+                    </div>
+                    
+                    <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-gradient-to-tr from-stc-orange to-stc-purple opacity-5 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out z-0"></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Search Listener
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const filtered = quizData.filter(item => 
+                item.q.toLowerCase().includes(query) || 
+                item.a.toLowerCase().includes(query) ||
+                item.id.toString().includes(query)
+            );
+            renderCards(filtered);
+        });
+
+        // Download HTML File
+        function downloadApp() {
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'AG_Quizlet_App.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Initial Page Setup
+        document.addEventListener('DOMContentLoaded', ()function() {
+            renderCards(quizData);
+            
+            const versionTag = document.getElementById('version-tagline');
+            if (versionTag) {
+                const months = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+                const now = new Date();
+                versionTag.textContent = `نسخة ${months[now.getMonth()]} ${now.getFullYear()}`;
+            }
+        });
+    </script>
+</body>
+</html>
