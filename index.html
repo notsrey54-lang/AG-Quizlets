@@ -8,68 +8,34 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts & FontAwesome -->
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        stc: {
-                            purple: '#4F008C',
-                            light: '#6c22a6',
-                            orange: '#FF4B00'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Tajawal', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
-        body {
-            background-color: #f8fafc;
-        }
+        body { background-color: #f8fafc; font-family: 'Tajawal', sans-serif; }
 
-        /* Luxury Color Overrides */
+        /* Custom Colors & Themes */
         .text-stc-purple { color: #D4AF37 !important; }
         .bg-stc-purple { background-color: #0A0E23 !important; }
-        .from-stc-purple { --tw-gradient-from: #0A0E23 !important; }
-        .to-stc-light { --tw-gradient-to: #162345 !important; }
-        .from-stc-light { --tw-gradient-from: #162345 !important; }
-        .to-stc-purple { --tw-gradient-to: #D4AF37 !important; }
         .border-stc-purple { border-color: #D4AF37 !important; }
-        
+        .bg-purple-50 { background-color: #f5f0e8 !important; }
+
         /* Card Hover Effects */
         .q-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
         .q-card:hover { 
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             box-shadow: 0 10px 20px -3px rgba(212, 175, 55, 0.25) !important; 
             border-color: #D4AF37 !important; 
         }
-        .bg-purple-50 { background-color: #f5f0e8 !important; }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-
-        /* Smooth fade in animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
     </style>
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col">
@@ -97,7 +63,7 @@
                     </div>
                     <input type="text" id="searchInput" class="block w-full pr-11 pl-4 py-3.5 border border-slate-200 rounded-2xl leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-stc-purple/20 focus:border-stc-purple transition-all duration-200 shadow-sm" placeholder="ابحث عن باقة، كود، أو سؤال...">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
-                        <span id="count-badge" class="bg-stc-purple text-white text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">93</span>
+                        <span id="count-badge" class="bg-stc-purple text-white text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">0</span>
                     </div>
                 </div>
 
@@ -136,12 +102,12 @@
             <p class="text-center text-lg md:text-xl font-medium italic text-stc-purple">Stay calm, stay focused, and trust your prep</p>
         </div>
 
-        <!-- Dynamic Grid Container -->
+        <!-- Grid Container -->
         <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
         <!-- Empty State -->
-        <div id="empty-state" class="flex-col items-center justify-center py-20 text-center animate-fade-in hidden">
-            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6 text-slate-300 text-3xl ring-4 ring-white shadow-sm">
+        <div id="empty-state" class="flex-col items-center justify-center py-20 text-center hidden">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6 text-slate-300 text-3xl ring-4 ring-white shadow-sm mx-auto">
                 <i class="fa-solid fa-magnifying-glass-location"></i>
             </div>
             <h3 class="text-xl font-bold text-slate-700">لا توجد نتائج</h3>
@@ -256,30 +222,36 @@
             {id: 93, q: "هل تتوفر شبكة 5G-advance في جميع مناطق الكويت؟", a: "لا"}
         ];
 
-        const container = document.getElementById('results-container');
-        const searchInput = document.getElementById('searchInput');
-        const countBadge = document.getElementById('count-badge');
-        const emptyState = document.getElementById('empty-state');
-
         function renderCards(items) {
+            const container = document.getElementById('results-container');
+            const countBadge = document.getElementById('count-badge');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (!container) return;
+
             container.innerHTML = '';
             
             if (items.length === 0) {
                 container.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
+                if (emptyState) {
+                    emptyState.classList.remove('hidden');
+                    emptyState.classList.add('flex');
+                }
             } else {
                 container.classList.remove('hidden');
-                emptyState.classList.add('hidden');
-                emptyState.classList.remove('flex');
+                if (emptyState) {
+                    emptyState.classList.add('hidden');
+                    emptyState.classList.remove('flex');
+                }
             }
 
-            countBadge.textContent = items.length;
+            if (countBadge) {
+                countBadge.textContent = items.length;
+            }
 
-            items.forEach((item, index) => {
+            items.forEach((item) => {
                 const card = document.createElement('div');
-                card.className = 'q-card bg-white rounded-2xl p-6 border border-slate-100 flex flex-col justify-between h-full relative overflow-hidden group animate-fade-in';
-                card.style.animationDelay = `${Math.min(index * 30, 300)}ms`;
+                card.className = 'q-card bg-white rounded-2xl p-6 border border-slate-100 flex flex-col justify-between h-full relative overflow-hidden group shadow-sm';
                 
                 card.innerHTML = `
                     <div class="relative z-10">
@@ -301,21 +273,36 @@
                     <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-gradient-to-tr from-stc-orange to-stc-purple opacity-5 rounded-full group-hover:scale-150 transition-transform duration-500 ease-out z-0"></div>
                 `;
                 container.appendChild(card);
+            500 ease-out z-0"></div>
+                `;
+                container.appendChild(card);
             });
         }
 
-        // Search Listener
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            const filtered = quizData.filter(item => 
-                item.q.toLowerCase().includes(query) || 
-                item.a.toLowerCase().includes(query) ||
-                item.id.toString().includes(query)
-            );
-            renderCards(filtered);
-        });
+        function initApp() {
+            renderCards(quizData);
 
-        // Download HTML File
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    const filtered = quizData.filter(item => 
+                        item.q.toLowerCase().includes(query) || 
+                        item.a.toLowerCase().includes(query) ||
+                        item.id.toString().includes(query)
+                    );
+                    renderCards(filtered);
+                });
+            }
+
+            const versionTag = document.getElementById('version-tagline');
+            if (versionTag) {
+                const months = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+                const now = new Date();
+                versionTag.textContent = `نسخة ${months[now.getMonth()]} ${now.getFullYear()}`;
+            }
+        }
+
         function downloadApp() {
             const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
             const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
@@ -329,17 +316,11 @@
             URL.revokeObjectURL(url);
         }
 
-        // Initial Page Setup
-        document.addEventListener('DOMContentLoaded', ()function() {
-            renderCards(quizData);
-            
-            const versionTag = document.getElementById('version-tagline');
-            if (versionTag) {
-                const months = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-                const now = new Date();
-                versionTag.textContent = `نسخة ${months[now.getMonth()]} ${now.getFullYear()}`;
-            }
-        });
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>
