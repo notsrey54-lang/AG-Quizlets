@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7fa">
+  <meta name="description" content="AG Quizlet Signature Edition — enterprise employee knowledge library.">
+  <title>AG Quizlet | Signature Edition</title>
+  <style>
+    :root {
+      --page: #f4f7fb;
+      --page-glow: #fbfcff;
+      --card: rgba(255,255,255,.94);
+      --ink: #0c1b38;
+      --ink-soft: #20365c;
+      --muted: #7d90af;
+      --line: #e6edf5;
+      --line-strong: #d9e4f0;
+      --gold: #d3a92f;
+      --gold-deep: #b78816;
+      --gold-pale: #fbf4df;
+      --blue-pale: #eff5fb;
+      --success: #138a59;
+      --success-pale: #edf9f3;
+      --danger: #bd3e47;
+      --shadow: 0 18px 46px rgba(14, 32, 61, .09);
+      --shadow-soft: 0 8px 23px rgba(14, 32, 61, .06);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 13px;
+    }
+    [data-theme="night"] {
+      --page: #081323;
+      --page-glow: #0b1a2e;
+      --card: rgba(14,31,53,.96);
+      --ink: #f6f9fd;
+      --ink-soft: #d2deed;
+      --muted: #96a9c5;
+      --line: rgba(207,224,244,.13);
+      --line-strong: rgba(207,224,244,.23);
+      --gold-pale: rgba(211,169,47,.14);
+      --blue-pale: rgba(125,158,202,.13);
+      --success-pale: rgba(19,138,89,.15);
+      --shadow: 0 20px 52px rgba(0, 0, 0, .26);
+      --shadow-soft: 0 8px 23px rgba(0, 0, 0, .2);
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--page); }
+    body {
+      min-width: 320px; min-height: 100vh; margin: 0; color: var(--ink); background:
+        radial-gradient(circle at 84% 0%, rgba(222, 185, 71, .1), transparent 23rem),
+        radial-gradient(circle at 3% 35%, rgba(142, 182, 225, .1), transparent 24rem),
+        linear-gradient(140deg, var(--page-glow), var(--page));
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(211,169,47,.43); outline-offset: 3px; }
+    .hidden { display: none !important; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    .topbar { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--card) 91%, transparent); box-shadow: 0 5px 20px rgba(18,39,72,.08); backdrop-filter: blur(19px); }
+    .topbar-inner { width: min(1220px, calc(100% - 36px)); min-height: 85px; display: grid; grid-template-columns: 1fr minmax(280px, 450px) 1fr; align-items: center; gap: 20px; margin: 0 auto; direction: rtl; }
+    .brand { justify-self: start; display: flex; align-items: center; gap: 11px; }
+    .brand-copy { text-align: right; }
+    .brand-copy strong { display: block; color: var(--gold); font-size: 22px; letter-spacing: -.04em; }
+    .brand-copy small { display: inline-flex; margin-top: 4px; padding: 3px 9px; border-radius: 999px; color: var(--muted); background: var(--blue-pale); font-size: 10px; font-weight: 780; }
+    .brand-mark { width: 55px; height: 55px; display: grid; place-items: center; border-radius: 14px; color: #fff; background: linear-gradient(145deg, #e5c773, #bd9140); box-shadow: 0 9px 20px rgba(178,132,25,.3), inset 0 1px rgba(255,255,255,.52); font: 800 27px Georgia, serif; }
+    .search { position: relative; }
+    .search input { width: 100%; min-height: 49px; padding: 0 54px 0 77px; border: 1px solid var(--line-strong); border-radius: 16px; color: var(--ink); background: color-mix(in srgb, var(--card) 89%, transparent); box-shadow: var(--shadow-soft); }
+    .search input::placeholder { color: var(--muted); }
+    .search svg { position: absolute; right: 18px; top: 50%; width: 16px; height: 16px; color: var(--muted); transform: translateY(-50%); pointer-events: none; }
+    .question-count { position: absolute; left: 10px; top: 50%; min-width: 35px; min-height: 28px; display: grid; place-items: center; padding: 0 8px; border-radius: 9px; color: #fff; background: var(--ink); font-size: 11px; font-weight: 850; transform: translateY(-50%); }
+    .header-actions { justify-self: end; display: flex; align-items: center; gap: 9px; direction: ltr; }
+    .button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 13px; border: 1px solid transparent; border-radius: 11px; color: var(--ink); font-size: 11px; font-weight: 850; transition: .18s ease; }
+    .button:hover { transform: translateY(-1px); }
+    .button-primary { color: #fff; background: var(--ink); box-shadow: 0 9px 19px rgba(12,27,56,.19); }
+    .button-primary:hover { background: #172b52; }
+    .button-soft { border-color: var(--line-strong); background: var(--card); }
+    .button-soft:hover { border-color: rgba(211,169,47,.6); color: var(--gold-deep); }
+    .button-gold { color: #715210; border-color: #efdfaa; background: var(--gold-pale); }
+    .button-gold:hover { background: #f9e9b8; }
+    .icon-button { width: 39px; min-width: 39px; padding: 0; }
+
+    .statusbar { border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--card) 77%, transparent); }
+    .statusbar-inner { width: min(1220px, calc(100% - 36px)); min-height: 54px; display: flex; align-items: center; justify-content: flex-start; gap: 30px; margin: 0 auto; }
+    .status-item { display: grid; gap: 2px; text-align: right; }
+    .status-item span { color: var(--muted); font-size: 10px; font-weight: 720; }
+    .status-item b { color: var(--ink); font-size: 12px; }
+    .status-item b.gold { color: var(--gold-deep); }
+    .status-item b.live { color: var(--success); }
+    .nav { margin-right: auto; display: flex; gap: 8px; }
+    .nav button { min-height: 31px; padding: 0 10px; border: 0; border-radius: 9px; color: var(--muted); background: transparent; font-size: 11px; font-weight: 800; }
+    .nav button.active { color: var(--ink); background: var(--blue-pale); }
+
+    .page { width: min(1220px, calc(100% - 36px)); margin: 0 auto; padding: 34px 0 54px; }
+    .motivation { min-height: 61px; display: grid; place-items: center; padding: 14px 25px; border: 1px solid var(--line); border-radius: 17px; color: var(--gold-deep); background: color-mix(in srgb, var(--blue-pale) 74%, var(--card)); box-shadow: var(--shadow-soft); text-align: center; font-family: Georgia, serif; font-size: clamp(16px, 2vw, 20px); font-style: italic; }
+    .overview { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 20px; margin: 27px 0 17px; }
+    .overview h1 { margin: 0; color: var(--ink); font-size: clamp(27px, 4vw, 43px); letter-spacing: -.055em; }
+    .overview p { max-width: 640px; margin: 9px 0 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .overview-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 18px; }
+    .metric { min-height: 94px; padding: 15px 17px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--card); box-shadow: var(--shadow-soft); }
+    .metric span { display: block; color: var(--muted); font-size: 10px; font-weight: 800; }
+    .metric strong { display: block; margin-top: 9px; color: var(--ink); font-size: 25px; letter-spacing: -.04em; }
+    .metric strong.gold { color: var(--gold-deep); }
+    .metric strong.success { color: var(--success); }
+    .metric small { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; }
+    .shelf { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 15px 0 14px; }
+    .shelf-label { margin-left: 5px; color: var(--muted); font-size: 10px; font-weight: 900; letter-spacing: .07em; }
+    .filter { min-height: 34px; display: inline-flex; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--ink-soft); background: var(--card); font-size: 10px; font-weight: 820; }
+    .filter:hover { border-color: rgba(211,169,47,.65); }
+    .filter.active { color: #725510; border-color: #ead795; background: var(--gold-pale); }
+    .filter-count { min-width: 17px; height: 17px; display: grid; place-items: center; padding: 0 4px; border-radius: 999px; color: inherit; background: rgba(12,27,56,.08); font-size: 9px; }
+    .tool-row { display: grid; grid-template-columns: minmax(0,1fr) auto auto; gap: 10px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: color-mix(in srgb, var(--card) 92%, transparent); box-shadow: var(--shadow-soft); }
+    .tool-row .select { min-width: 151px; }
+    .select label { display: block; margin-bottom: 5px; color: var(--muted); font-size: 9px; font-weight: 850; }
+    select, textarea, input { font-family: inherit; }
+    select, .field input, .field textarea { width: 100%; min-height: 40px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 10px; color: var(--ink); background: var(--card); }
+    option { color: #15243e; background: #fff; }
+    .sprint-banner { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 17px 0; padding: 13px 16px; border: 1px solid #e8d38b; border-radius: 14px; color: #6a4b06; background: linear-gradient(100deg, #fff9e8, #fcf0c9); }
+    .sprint-banner b { display: block; font-size: 12px; }
+    .sprint-banner span { display: block; margin-top: 3px; color: #947326; font-size: 10px; }
+    .result-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 17px 2px 15px; color: var(--muted); font-size: 11px; }
+    .result-meta b { color: var(--ink); }
+
+    .qa-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 17px; direction: rtl; }
+    .qa-card { position: relative; min-height: 306px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--card); box-shadow: var(--shadow-soft); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .qa-card:hover { border-color: rgba(211,169,47,.46); box-shadow: var(--shadow); transform: translateY(-4px); }
+    .qa-card::after { content: ""; position: absolute; right: -26px; bottom: -26px; width: 78px; height: 78px; border-radius: 50%; background: rgba(211,169,47,.08); pointer-events: none; }
+    .card-main { flex: 1; padding: 19px 20px 12px; }
+    .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .badge { display: inline-flex; align-items: center; min-height: 25px; padding: 0 9px; border-radius: 8px; color: var(--gold-deep); background: var(--gold-pale); font-size: 10px; font-weight: 900; }
+    .topic { display: inline-flex; min-height: 25px; align-items: center; padding: 0 9px; border-radius: 8px; color: var(--muted); background: var(--blue-pale); font-size: 10px; font-weight: 800; }
+    .card-icons { display: flex; gap: 5px; }
+    .card-icon { width: 27px; height: 27px; display: grid; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 8px; color: var(--muted); background: transparent; font-size: 13px; }
+    .card-icon:hover { color: var(--gold-deep); background: var(--gold-pale); }
+    .card-icon.active { color: #fff; background: var(--ink); }
+    .card-icon.review-active { color: #7d5a10; background: var(--gold-pale); }
+    .card-icon.mastered-active { color: #fff; background: var(--success); }
+    .qa-card h2 { min-height: 101px; display: grid; align-items: center; margin: 20px 0 0; color: var(--ink); font-size: clamp(15px, 1.7vw, 18px); line-height: 1.68; text-align: right; letter-spacing: -.025em; }
+    .answer-block { margin: 0 20px 15px; padding-top: 15px; border-top: 1px dashed var(--line-strong); }
+    .answer-label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 9px; font-weight: 900; letter-spacing: .07em; }
+    .answer-text { min-height: 55px; display: flex; align-items: center; justify-content: center; padding: 12px 13px; border-radius: 12px; color: var(--gold-deep); background: linear-gradient(145deg, var(--blue-pale), color-mix(in srgb, var(--gold-pale) 45%, var(--blue-pale))); font-size: 14px; font-weight: 850; line-height: 1.6; text-align: center; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 20px; border-top: 1px solid var(--line); color: var(--muted); background: color-mix(in srgb, var(--blue-pale) 40%, transparent); font-size: 9px; font-weight: 720; }
+    .mastered-label { color: var(--success); font-weight: 900; }
+    .empty { display: grid; place-items: center; min-height: 270px; padding: 30px; border: 1px dashed var(--line-strong); border-radius: var(--radius-lg); color: var(--muted); background: var(--card); text-align: center; }
+    .empty strong { display: block; margin-bottom: 7px; color: var(--ink); font-size: 17px; }
+    .pagination { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); box-shadow: var(--shadow-soft); }
+    .pagination span { color: var(--muted); font-size: 10px; }
+    .pagination b { color: var(--ink); }
+    .pagination-actions { display: flex; gap: 7px; }
+    .button:disabled { cursor: not-allowed; transform: none; opacity: .48; }
+
+    .bank-view { display: grid; grid-template-columns: minmax(0, 1.28fr) minmax(325px,.72fr); gap: 18px; align-items: start; direction: ltr; }
+    .bank-list, .editor { direction: rtl; }
+    .bank-title { margin: 0 0 18px; }
+    .bank-title h1 { margin: 0; color: var(--ink); font-size: clamp(27px, 4vw, 39px); letter-spacing: -.05em; }
+    .bank-title p { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .panel { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--card); box-shadow: var(--shadow-soft); }
+    .panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 19px 20px 14px; border-bottom: 1px solid var(--line); }
+    .panel-head h2 { margin: 0; color: var(--ink); font-size: 16px; }
+    .panel-head p { margin: 5px 0 0; color: var(--muted); font-size: 10px; }
+    .panel-search { padding: 12px 15px; border-bottom: 1px solid var(--line); }
+    .panel-search input { width: 100%; min-height: 40px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 10px; color: var(--ink); background: var(--page-glow); }
+    .bank-items { display: grid; }
+    .bank-item { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 11px; padding: 13px 16px; border-bottom: 1px solid var(--line); }
+    .bank-item:last-child { border-bottom: 0; }
+    .bank-number { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 8px; color: var(--gold-deep); background: var(--gold-pale); font-size: 10px; font-weight: 850; }
+    .bank-item h3 { margin: 0; overflow: hidden; color: var(--ink); font-size: 12px; line-height: 1.5; text-overflow: ellipsis; white-space: nowrap; }
+    .bank-item p { margin: 4px 0 0; color: var(--muted); font-size: 9px; }
+    .bank-actions { display: flex; gap: 5px; }
+    .mini { width: 29px; height: 29px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); background: transparent; font-size: 12px; }
+    .mini:hover { color: var(--gold-deep); border-color: #ead795; background: var(--gold-pale); }
+    .mini.delete:hover { color: var(--danger); border-color: #f0c5c9; background: #fff0f0; }
+    .editor { position: sticky; top: 112px; }
+    .editor-top { padding: 20px; background: linear-gradient(140deg, color-mix(in srgb, var(--gold-pale) 72%, var(--card)), var(--card)); }
+    .editor-top h2 { margin: 0; color: var(--ink); font-size: 18px; }
+    .editor-top p { margin: 5px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .form { display: grid; gap: 13px; padding: 18px 20px 20px; }
+    .field { display: grid; gap: 6px; }
+    .field label { color: var(--ink-soft); font-size: 10px; font-weight: 850; }
+    .field label span { color: var(--gold-deep); }
+    .field textarea { min-height: 87px; padding: 10px; resize: vertical; line-height: 1.65; }
+    .field textarea.answer-input { min-height: 74px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-error { min-height: 16px; margin: 0; color: var(--danger); font-size: 10px; font-weight: 760; }
+    .form-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .editor-note { padding: 0 20px 19px; color: var(--muted); font-size: 9px; line-height: 1.7; }
+
+    .toast { position: fixed; z-index: 20; bottom: 22px; left: 22px; max-width: min(390px, calc(100vw - 44px)); padding: 13px 15px; border: 1px solid #e5cf88; border-radius: 13px; color: #45350b; background: #fff8df; box-shadow: 0 17px 35px rgba(13,30,59,.18); font-size: 11px; font-weight: 820; transform: translateY(140%); opacity: 0; transition: .23s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .live { position: fixed; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    @media (max-width: 1020px) { .qa-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } .bank-view { grid-template-columns: 1fr; } .editor { position: static; } }
+    @media (max-width: 760px) {
+      .topbar-inner { width: min(100% - 28px, 620px); grid-template-columns: 1fr auto; padding: 12px 0; gap: 12px; }
+      .brand { grid-column: 1; grid-row: 1; } .brand-mark { width: 44px; height: 44px; font-size: 21px; } .brand-copy strong { font-size: 18px; }
+      .header-actions { grid-column: 2; grid-row: 1; } .header-actions .button-primary { display: none; }
+      .search { grid-column: 1 / -1; grid-row: 2; } .statusbar-inner { width: min(100% - 28px, 620px); gap: 13px; overflow-x: auto; } .nav { margin-right: 0; }
+      .page { width: min(100% - 28px, 620px); padding-top: 23px; } .overview { align-items: stretch; grid-template-columns: 1fr; } .overview-actions { justify-content: flex-start; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; } .tool-row { grid-template-columns: 1fr 1fr; } .tool-row .select:first-child { grid-column: 1 / -1; }
+    }
+    @media (max-width: 560px) { .qa-grid { grid-template-columns: 1fr; } .card-main { padding: 16px 17px 10px; } .answer-block { margin: 0 17px 13px; } .card-footer { padding: 10px 17px; } .sprint-banner, .pagination { align-items: stretch; flex-direction: column; } .pagination-actions .button { flex: 1; } .form-row { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="brand-mark" aria-hidden="true">AG</div><div class="brand-copy"><strong>AG Quizlet</strong><small>Signature 2026 edition</small></div></div>
+      <label class="search" for="global-search"><span class="sr-only">ابحث في المكتبة</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="m16 16 4 4"></path></svg><input id="global-search" type="search" autocomplete="off" placeholder="ابحث في سؤال، إجابة، كود، أو باقة..."><span id="question-count" class="question-count">0</span></label>
+      <div class="header-actions"><button id="theme-button" class="button button-soft icon-button" type="button" aria-label="تغيير المظهر">◐</button><button id="backup-button" class="button button-primary" type="button">⇩ حفظ نسخة</button></div>
+    </div>
+  </header>
+  <section class="statusbar" aria-label="حالة المكتبة"><div class="statusbar-inner"><div class="status-item"><span>حالة المحتوى</span><b class="live">محدّث ✓</b></div><div class="status-item"><span>المشروع</span><b class="gold">AG KW</b></div><div class="status-item"><span>مركز المعرفة</span><b>Employee Learning</b></div><nav class="nav" aria-label="الأقسام"><button data-view="library" class="active" type="button">AG Quizlet</button><button data-view="bank" type="button">بنك الأسئلة</button></nav></div></section>
+
+  <main class="page">
+    <section id="library-view" aria-labelledby="library-title">
+      <div class="motivation">Stay calm, stay focused, and trust your preparation.</div>
+      <header class="overview"><div><h1 id="library-title">مكتبة أسئلة AG</h1><p>بطاقات معرفة جاهزة للمراجعة السريعة. تظهر الإجابة المعتمدة مباشرة تحت كل سؤال، بدون أي خطوة إضافية.</p></div><div class="overview-actions"><button id="focus-sprint-button" class="button button-gold" type="button">⚡ جلسة تركيز عشوائية</button><button id="go-to-bank" class="button button-soft" type="button">＋ إضافة سؤال وجواب</button></div></header>
+      <section class="metric-grid" aria-label="إحصاءات التدريب"><article class="metric"><span>إجمالي الأسئلة</span><strong id="metric-total">0</strong><small>محتوى منشور</small></article><article class="metric"><span>المفضلة</span><strong id="metric-favorites" class="gold">0</strong><small>للرجوع السريع</small></article><article class="metric"><span>للمراجعة</span><strong id="metric-review" class="gold">0</strong><small>موضوعات تحتاج تركيز</small></article><article class="metric"><span>أتقنتها</span><strong id="metric-mastered" class="success">0</strong><small>تقدّمك الشخصي</small></article></section>
+      <div id="collection-filters" class="shelf" aria-label="فلاتر المجموعات"></div>
+      <section class="tool-row" aria-label="ترتيب وفلاتر المكتبة"><div class="select"><label for="topic-filter">التصنيف</label><select id="topic-filter"></select></div><div class="select"><label for="sort-filter">الترتيب</label><select id="sort-filter"><option value="default">ترتيب المكتبة</option><option value="topic">حسب التصنيف</option><option value="newest">الأحدث أولاً</option></select></div><button id="clear-filters" class="button button-soft" type="button">إعادة ضبط</button></section>
+      <section id="sprint-banner" class="sprint-banner hidden" aria-live="polite"><div><b>جلسة التركيز نشطة</b><span id="sprint-copy">—</span></div><button id="end-sprint" class="button button-soft" type="button">إنهاء الجلسة</button></section>
+      <div class="result-meta"><span id="result-summary">جارٍ تحميل المكتبة...</span><span>Shortcut: Ctrl / ⌘ + K</span></div>
+      <div id="qa-grid" class="qa-grid"></div>
+      <div id="empty-state" class="empty hidden"><div><strong>لا توجد بطاقات مطابقة</strong><span>جرّبوا بحثاً أو تصنيفاً مختلفاً، أو أضيفوا سؤالاً جديداً إلى بنك الأسئلة.</span></div></div>
+      <nav id="pagination" class="pagination" aria-label="تنقل بطاقات المعرفة"><span id="pagination-info">—</span><div class="pagination-actions"><button id="next-page" class="button button-soft" type="button">التالي</button><button id="previous-page" class="button button-soft" type="button">السابق</button></div></nav>
+    </section>
+
+    <section id="bank-view" class="hidden" aria-labelledby="bank-title">
+      <header class="bank-title"><h1 id="bank-title">بنك الأسئلة</h1><p>أضيفوا أو عدّلوا أسئلة AG Quizlet من مكان واحد. كل سؤال منشور يظهر مباشرة في مكتبة المراجعة.</p></header>
+      <div class="bank-view">
+        <section class="panel bank-list" aria-labelledby="bank-list-title"><header class="panel-head"><div><h2 id="bank-list-title">المحتوى الحالي</h2><p id="bank-summary">—</p></div><span id="bank-count" class="badge">0</span></header><div class="panel-search"><label class="sr-only" for="bank-search">ابحث داخل بنك الأسئلة</label><input id="bank-search" type="search" autocomplete="off" placeholder="ابحث لإدارة السؤال أو الإجابة..."></div><div id="bank-items" class="bank-items"></div><nav id="bank-pagination" class="pagination" aria-label="تنقل بنك الأسئلة"><span id="bank-pagination-info">—</span><div class="pagination-actions"><button id="bank-next" class="button button-soft" type="button">التالي</button><button id="bank-previous" class="button button-soft" type="button">السابق</button></div></nav></section>
+        <aside class="panel editor"><header class="editor-top"><h2 id="editor-title">إضافة سؤال وجواب</h2><p id="editor-subtitle">أضيفوا سؤالاً واضحاً وإجابته المعتمدة ليظهر في AG Quizlet.</p></header><form id="question-form" class="form" novalidate><input id="editing-id" type="hidden"><div class="field"><label for="question-prompt">السؤال <span>*</span></label><textarea id="question-prompt" maxlength="700" required placeholder="اكتبوا السؤال كما سيظهر للموظف..."></textarea></div><div class="field"><label for="question-answer">الإجابة المعتمدة <span>*</span></label><textarea id="question-answer" class="answer-input" maxlength="900" required placeholder="اكتبوا الإجابة الواضحة والمعتمدة..."></textarea></div><div class="form-row"><div class="field"><label for="question-topic">التصنيف</label><input id="question-topic" maxlength="40" placeholder="مثال: الأنظمة"></div><div class="field"><label for="question-status">الحالة</label><select id="question-status"><option value="published">منشور</option><option value="draft">مسودة</option></select></div></div><p id="form-error" class="form-error" role="alert" aria-live="polite"></p><div class="form-actions"><button id="save-question" class="button button-primary" type="submit">حفظ السؤال</button><button id="clear-form" class="button button-soft" type="button">إلغاء</button></div></form><p class="editor-note">في هذه النسخة تُحفظ التغييرات داخل المتصفح ويمكن حفظ نسخة JSON. داخل المنصة، اربطوا دالة الحفظ بصلاحيات المحتوى وواجهة API.</p></aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="live-region" class="live" aria-live="polite"></div>
+  <script id="embedded-state" type="application/json">{}</script>
+  <script>
+    'use strict';
+    const defaultQuestionSeed = [
+            {id: 1, q: "ماذا تظهر حالة 'In progress' في نظام BSS؟", a: "المعاملة جارية"},
+            {id: 2, q: "ماذا يحصل عند استخدام كامل سعة الإنترنت في خدمة 'خليك ON'؟", a: "يتم تقليل السرعة إلى 256 كيلوبت"},
+            {id: 3, q: "ما هو رمز إلغاء الاشتراك الموحد الجديد لباقات الدفع المسبق؟", a: "إرسال ( D ) إلى (510)"},
+            {id: 4, q: "في نظام BSS، كيف يستطيع الموظف مشاهدة تاريخ المعاملات؟", a: "عن طريق خانة (Requests)"},
+            {id: 5, q: "في نظام BSS، يستطيع العميل الدفع عن طريق:", a: "Cash / Debit / Credit"},
+            {id: 6, q: "في تكلفة عقد الإنهاء في خانة نظرة عامة تعني (BSS System):", a: "جميع ما سبق"},
+            {id: 7, q: "مع خط الهاتف للدفع الآجل الصوتية بقيمة 16 دينار كويتي، يمكن للعميل استخدام 1000 دقيقة:", a: "المحلية"},
+            {id: 8, q: "ما هي متطلبات تقديم مطالبة Device Care؟", a: "كل ما سبق (مدنية + عقد)"},
+            {id: 9, q: "فيما يتعلق ببرنامج Trade In، لا يتم تضمين أحد الشروط التالية في تقييم الجهاز:", a: "الحاجة إلى علبة وشاحن"},
+            {id: 10, q: "يمكن للعملاء اللذين لديهم باقة تميز 100 د.ك للدفع الآجل الصوتي استخدام إنترنت التجوال بسعة:", a: "150 GB"},
+            {id: 11, q: "تشمل ميزات Home Pass الأساسية لخدمة Plume Mesh ما يلي:", a: "إدارة خصوصية البيانات"},
+            {id: 12, q: "ماذا توضح خانة 'Age on Network' في نظام BSS؟", a: "Connection date"},
+            {id: 13, q: "العروض الترويجية والإعلامية في نظرة عامة على BSS تظهر بناءً على:", a: "حسب أهلية العميل"},
+            {id: 14, q: "سعر استخدام الرسائل المحلية في باقات الدفع الآجل (خارج الباقة) هو:", a: "20 فلس / للرسالة"},
+            {id: 15, q: "في باقة 25 د.ك خليك-ON صوتية، يحصل العميل على كم رسالة محلية؟", a: "1000 رسالة"},
+            {id: 16, q: "في باقة 35 د.ك خليك-ON صوتية، يحصل العميل على كم رسالة محلية؟", a: "1000 رسالة"},
+            {id: 17, q: "توفر باقة التميز 75 دينار للدفع الآجل كم رسالة محلية؟", a: "2000 رسالة محلية"},
+            {id: 18, q: "ما هي رسوم باقة التجوال الخاصة (7 أيام) بين السعودية والبحرين؟", a: "KD 8"},
+            {id: 19, q: "في باقة التجوال المميزة بقيمة 12 د.ك يحصل العميل على رسائل تجوال:", a: "SMS 30"},
+            {id: 20, q: "يتم تفعيل باقة 12 د.ك المميزة للتجوال عبر إرسال كود:", a: "p1 to 102"},
+            {id: 21, q: "بأي توقيت تُحسب صلاحية باقات التجوال؟", a: "توقيت دولة الكويت المحلي"},
+            {id: 22, q: "مدة الانتظار المسموحة؟", a: "لا يتعدى 30 ثانية"},
+            {id: 23, q: "لإلغاء خدمة الـ Budget Control نستخدم الرمز:", a: "#550#"},
+            {id: 24, q: "عند التسجيل في برنامج قطاف بخط دفع آجل، يحصل العميل على نقاط ترحيبية:", a: "30 نقطة"},
+            {id: 25, q: "صلاحية النقاط في برنامج قطاف هي:", a: "12 شهر"},
+            {id: 26, q: "كم تبلغ تكلفة الدقيقة المحلية في باقات الدفع الآجل الصوتية؟", a: "39 فلس"},
+            {id: 27, q: "ماهي المدة من انتقال MEDIUM-risk إلى Low-risk profile؟", a: "شهر واحد"},
+            {id: 28, q: "أي من التطبيقات التالية غير مشمول في سعة التواصل الاجتماعي المجانية؟", a: "زوم (Zoom)"},
+            {id: 29, q: "أين تتم عملية نقل ملكية الخط (دفع آجل أو مسبق صوتي)؟", a: "من خلال زيارة الفرع"},
+            {id: 30, q: "في حال وفاة صاحب الخط، ما الإجراء المطلوب؟", a: "مراجعة ذوي المتوفى للفرع"},
+            {id: 31, q: "عميل مهتم بالصحة واللياقة البدنية، ما المنتج الأنسب له؟", a: "ساعة آبل"},
+            {id: 32, q: "عميل من فئة الأعمال يريد رقماً مميزاً، ما هو الخيار الأنسب؟", a: "رقم سوبر gold / بلاتيني"},
+            {id: 33, q: "كم دقيقة محلية في باقة go المسبقة الأسبوعية بقيمة 6 د.ك؟", a: "100 دقيقة"},
+            {id: 34, q: "كيف يستعلم عميل الدفع الآجل عن استهلاكه للإنترنت؟", a: "إرسال الكود Q إلى 567"},
+            {id: 35, q: "باقة التجوال المميزة بقيمة 12 د.ك تتيح للعميل استخدام...دقائق للاتصال بالكويت:", a: "30 دقيقة"},
+            {id: 36, q: "كيف يتم عملية اعادة التعبئة لخطوط دفع المسبق من خلال نظام ال BSS؟", a: "Service Request button / Recharge"},
+            {id: 37, q: "ما هي سعة الانترنت المتاحة للتجوال الخاص بين السعودية والبحرين (ليوم واحد)؟", a: "3GB"},
+            {id: 38, q: "وظيفة جهاز Plume Mesh هي:", a: "توسيع نطاق تغطية WI-FI لاجهزة Router"},
+            {id: 39, q: "ماذا تعني كلمة Upfront charges؟", a: "دفعة مقدمة"},
+            {id: 40, q: "استخدام الإنترنت الليلي (150GB) في باقات go للدفع المسبق هو من:", a: "من 1 صباحاً إلى 7 صباحاً"},
+            {id: 41, q: "في باقة 16 د.ك للدفع الآجل للإنترنت، سعة الاستخدام الشهرية هي:", a: "10 TB"},
+            {id: 42, q: "بعد استهلاك السعة المجانية لباقة 16 د.ك آجل تنخفض السرعة إلى:", a: "256 Kbps"},
+            {id: 43, q: "سياسة الاستخدام العادل في باقة 12 KD للدفع الآجل للإنترنت هي:", a: "2TB"},
+            {id: 44, q: "هل تتوفر خطة مشاركة الشريحة مع خط الإنترنت الدفع الآجل بقيمة 12 د.ك؟", a: "لا"},
+            {id: 45, q: "عميل يسافر كثيراً ويريد البقاء متصلاً، ما الخدمة الأنسب؟", a: "باقة بيانات تجوال"},
+            {id: 46, q: "هل يمكن التجديد التلقائي في باقة التجوال المميزة بقيمة 12 د.ك؟", a: "نعم"},
+            {id: 47, q: "كم عدد الأجهزة التي يمكن إضافتها مع باقات الإنترنت؟", a: "2"},
+            {id: 48, q: "مدة الالتزام لإضافة أجهزة لعملاء إنترنت الدفع الآجل الجديد:", a: "24 شهر"},
+            {id: 49, q: "يستطيع العميل استخدام أكثر من جهاز واحد في عملية Trade In:", a: "صح"},
+            {id: 50, q: "في باقة الدفع الآجل 25 د.ك، يحصل العميل على دقائق محلية:", a: "2000 دقيقة"},
+            {id: 51, q: "أي باقة خليك-ON توفر دقائق غير محدودة؟", a: "KD 35"},
+            {id: 52, q: "تتوفر باقة الدفع الآجل 35 د.ك إنترنت محلي بسعة:", a: "500GB"},
+            {id: 53, q: "ما هو نوع الاجهزة المسموح بها عمل Trade in؟", a: "الهاتف المحمول / الجهاز اللوحي"},
+            {id: 54, q: "ما هي سعة الإنترنت في باقة الـ 25 الصوتية؟", a: "100 GB"},
+            {id: 55, q: "عميل خط التعبئة go القديم ينتقل لباقات الرسائل عبر كود:", a: "510"},
+            {id: 56, q: "عند رغبة العميل بدفع المبالغ المستحقة، ما هي الإجابة الخاطئة؟", a: "تحويل العميل للدعم الفني"},
+            {id: 57, q: "كم مدة الاستعداد للمكالمة؟", a: "أقل من 3 ثوان"},
+            {id: 58, q: "خيارات لا تتطلب توجيه العميل للفرع:", a: "الاستفسار عن الفاتورة"},
+            {id: 59, q: "يتم ترحيل الدقائق والرسائل غير المستخدمة للشهر التالي في الآجل؟", a: "خطأ"},
+            {id: 60, q: "الانترنت الاضافي المتاح في باقة الانترنت KD7 مسبق الدفع هو ل:", a: "3 KD"},
+            {id: 61, q: "باقة go المسبقة بقيمة 9 د.ك توفر دقائق وتواصل اجتماعي:", a: "صح (كل ما ذكر)"},
+            {id: 62, q: "تتوفر ميزة الـ Social Media بسعة 150GB مع خط 30/35 د.ك:", a: "خطأ"},
+            {id: 63, q: "يساعدنا شريط البحث في العثور على الملف الشخصي بواسطة (BSS):", a: "جميع ما سبق"},
+            {id: 64, q: "المنتج الأنسب للمهتم بالصحة والرياضة البدنية:", a: "ساعة آبل"},
+            {id: 65, q: "باقة التميز 50 د.ك للدفع الاجل الصوتي تحتوي على انترنت بسعة:", a: "6TB"},
+            {id: 66, q: "باقة التميز 90/100 د.ك للدفع الاجل الصوتي تحتوي على انترنت تجوال بسعة:", a: "150 GB"},
+            {id: 67, q: "ماهي المدة من انتقال High-risk إلى MEDIUM-risk profile؟", a: "3 اشهر"},
+            {id: 68, q: "رسوم الاتصال الى الكويت بالتجوال من اي دولة اوربية:", a: "KD 1.250"},
+            {id: 69, q: "لتغيير إعدادات الخصوصية في خدمة Plume، نستخدم ميزة:", a: "Home Pass"},
+            {id: 70, q: "سيحصل عملاء باقة 45 د.ك على (...) GB انترنت أثناء التجوال", a: "10GB"},
+            {id: 71, q: "قبل إجراء Trade in، يجب على الموظف أن يطلب من العميل ما يلي:", a: "عمل نسخة احتياطية من الجهاز القديم وحذف البيانات الشخصية"},
+            {id: 72, q: "ماذا يعني الاسم الكامل لـ VAS؟", a: "Value-added services"},
+            {id: 73, q: "ما هو نوع الاجهزة المسموح بها عمل Trade in؟", a: "الهاتف المحمول / الجهاز اللوحي"},
+            {id: 74, q: "عند التحقق من اسم الموظف الذي أجرى أي معاملة على الخط، فعلينا الانتقال إلى (BSS System):", a: "Requests"},
+            {id: 75, q: "يستطيع العميل ان يستخدم اكثر من جهاز واحد في عملية Trade-in:", a: "صح"}
+            ,{id: 76, q: "يحصل العملاء على كبل مجاني يصل طوله إلى ... متر مع باقة بيتي G5", a: "50 متر"}
+            ,{id: 77, q: "ما هي باقات Baity 5G التي تقدم شريحة SIM للمشاركة مجاناً؟", a: "KD 19"}
+            ,{id: 78, q: "هل تقدم باقات Baity 5G شريحة SIM للمشاركة مجاناً؟", a: "نعم"}
+            ,{id: 79, q: "يحصل عميل الدفع الاجل 45 د.ك مع التزام على:", a: "هاتف ذكي وراوتر"}
+            ,{id: 80, q: "قبل إجراء Tarde in، يجب على الموظف أن يطلب من العميل ما يلي:", a: "عمل نسخة احتياطية من الجهاز القديم وحذف البيانات الشخصية"}
+            ,{id: 81, q: "خدمة الانترنت الاضافي لباقات الدفع الالجل الانترنت KD 5 تمنح العميل:", a: "GB 250"}
+            ,{id: 82, q: "سيتمكن العملاء الذين لديهم خط دفع الالجل للإنترنت الجديد من إضافة أجهزة بناءً على مدة التزام:", a: "24 شهر"}
+            ,{id: 83, q: "كم هي تكلفة خدمة الايقاف المؤقت لمدة شهر؟", a: "لا شيء من المذكور"}
+            ,{id: 84, q: "توفر خدمة Device Care Essential للعميل:", a: "تمديد لمصنععة الجهاز"}
+            ,{id: 85, q: "يمكن استخدام المبلغ المحصل عليه الذي تم الحصول عليه عن طريق Trade in من أجل:", a: "الفواتير المتأخرة"}
+            ,{id: 86, q: "كم عدد الرسائل المحلية المجانية المتوفرة على باقة 25 د.ك خلك ON للدفع الالجل الصوتية؟", a: "1000 رسالة"}
+            ,{id: 87, q: "في باقة 35 د.ك خلك ON، يحصل العميل على ... دقيقة محلية:", a: "دقائق غير محدودة"}
+            ,{id: 88, q: "ما هي تكلفة خدمة FOZ للألعاب الإضافية على باقات Baity 5G؟", a: "5KD"}
+            ,{id: 89, q: "كيف يمكن للعميل الاستفسار عن استخدام الإنترنت لخطوط الدفع الآجل؟", a: "ارسل كود Q الى رقم 567"}
+            ,{id: 90, q: "ما هي خيارات الاشتراك المتاحة لخدمات بيتي 5G؟", a: "سنتان / 3 سنوات /18 شهرا"}
+            ,{id: 91, q: "ما هي صلاحية اخط بحالة ال grace؟", a: "30 يوم"}
+            ,{id: 92, q: "هل يحتوي جهاز الخارجي Baity5G (ODU) على بطاقة SIM؟", a: "نعم"}
+            ,{id: 93, q: "هل تتوفر شبكة 5G-advance في جميع مناطق الكويت؟", a: "لا"}
+];
+    const STORAGE_KEY = 'ag-quizlet-signature-2026-v1';
+    const QUESTION_API = '/api/questions';
+    const SHARED_REFRESH_MS = 5000;
+    const PAGE_SIZE = 12;
+    const DEFAULT_TOPICS = ['AG Knowledge', 'الأنظمة', 'المنتجات', 'الخدمات', 'السياسات', 'خدمة العملاء'];
+    const dom = {
+      library: document.getElementById('library-view'), bank: document.getElementById('bank-view'), nav: Array.from(document.querySelectorAll('[data-view]')),
+      globalSearch: document.getElementById('global-search'), questionCount: document.getElementById('question-count'), theme: document.getElementById('theme-button'), backup: document.getElementById('backup-button'),
+      goToBank: document.getElementById('go-to-bank'), focusSprint: document.getElementById('focus-sprint-button'), filters: document.getElementById('collection-filters'), topic: document.getElementById('topic-filter'), sort: document.getElementById('sort-filter'), clearFilters: document.getElementById('clear-filters'),
+      metricTotal: document.getElementById('metric-total'), metricFavorites: document.getElementById('metric-favorites'), metricReview: document.getElementById('metric-review'), metricMastered: document.getElementById('metric-mastered'),
+      sprintBanner: document.getElementById('sprint-banner'), sprintCopy: document.getElementById('sprint-copy'), endSprint: document.getElementById('end-sprint'), resultSummary: document.getElementById('result-summary'), qaGrid: document.getElementById('qa-grid'), empty: document.getElementById('empty-state'), pagination: document.getElementById('pagination'), paginationInfo: document.getElementById('pagination-info'), previous: document.getElementById('previous-page'), next: document.getElementById('next-page'),
+      bankSearch: document.getElementById('bank-search'), bankItems: document.getElementById('bank-items'), bankSummary: document.getElementById('bank-summary'), bankCount: document.getElementById('bank-count'), bankPagination: document.getElementById('bank-pagination'), bankPaginationInfo: document.getElementById('bank-pagination-info'), bankPrevious: document.getElementById('bank-previous'), bankNext: document.getElementById('bank-next'),
+      form: document.getElementById('question-form'), editing: document.getElementById('editing-id'), prompt: document.getElementById('question-prompt'), answer: document.getElementById('question-answer'), questionTopic: document.getElementById('question-topic'), status: document.getElementById('question-status'), formError: document.getElementById('form-error'), saveQuestion: document.getElementById('save-question'), clearForm: document.getElementById('clear-form'), editorTitle: document.getElementById('editor-title'), editorSubtitle: document.getElementById('editor-subtitle'), toast: document.getElementById('toast'), live: document.getElementById('live-region'), embedded: document.getElementById('embedded-state')
+    };
+    const ui = { view: 'library', collection: 'all', query: '', topic: 'all', sort: 'default', libraryPage: 0, bankQuery: '', bankPage: 0 };
+    let state;
+    let searchIndex = new Map();
+    let searchTimer = null;
+    let toastTimer = null;
+    let remoteQuestionUpdatedAt = 0;
+    let remoteQuestionETag = '';
+    let sharedQuestionsReady = false;
+    let sharedRefreshTimer = null;
+
+    function clone(value) { return JSON.parse(JSON.stringify(value)); }
+    function clean(value, fallback) { const current = String(value ?? '').trim(); return current || fallback; }
+    function identifier(prefix) { return prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8); }
+    function normaliseText(value) { return String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u064B-\u065F\u0670\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي'); }
+    function textNode(tag, className, content) { const element = document.createElement(tag); if (className) element.className = className; if (content !== undefined) element.textContent = content; return element; }
+    function formatDate(value) { if (!value) return 'المحتوى الأساسي'; const date = new Date(value); return Number.isNaN(date.getTime()) ? '—' : new Intl.DateTimeFormat('ar-KW', { day: 'numeric', month: 'short' }).format(date); }
+    function normaliseQuestion(value, index) {
+      const prompt = clean(value && (value.prompt || value.q), ''); const answer = clean(value && (value.answer || value.a), '');
+      if (!prompt || !answer) return null;
+      return { id: clean(value && value.id, 'question-' + (index + 1)), prompt: prompt, answer: answer, topic: clean(value && value.topic, 'AG Knowledge'), status: value && value.status === 'draft' ? 'draft' : 'published', createdAt: Number(value && value.createdAt) || 0, updatedAt: Number(value && value.updatedAt) || 0 };
+    }
+    function defaultState() { return { version: 1, updatedAt: 0, theme: 'light', favoriteIds: [], reviewIds: [], masteredIds: [], sprintIds: [], questions: defaultQuestionSeed.map(function(question, index) { return normaliseQuestion({ id: 'seed-' + (index + 1), q: question.q, a: question.a, topic: 'AG Knowledge', status: 'published' }, index); }).filter(Boolean) }; }
+    function normaliseIds(values, questions) { const allowed = new Set(questions.map(function(question) { return question.id; })); return Array.isArray(values) ? Array.from(new Set(values.filter(function(id) { return allowed.has(id); }))) : []; }
+    function normaliseState(candidate) {
+      if (!candidate || !Array.isArray(candidate.questions)) return defaultState();
+      const seen = new Set();
+      const questions = candidate.questions.map(normaliseQuestion).filter(function(question) { if (!question || seen.has(question.id)) return false; seen.add(question.id); return true; });
+      return { version: 1, updatedAt: Number(candidate.updatedAt) || 0, theme: candidate.theme === 'night' ? 'night' : 'light', favoriteIds: normaliseIds(candidate.favoriteIds, questions), reviewIds: normaliseIds(candidate.reviewIds, questions), masteredIds: normaliseIds(candidate.masteredIds, questions), sprintIds: normaliseIds(candidate.sprintIds, questions), questions: questions };
+    }
+    function parseJson(value) { try { return JSON.parse(value); } catch { return null; } }
+    function loadState() { const embedded = parseJson(dom.embedded.textContent || ''); let stored = null; try { stored = parseJson(localStorage.getItem(STORAGE_KEY) || ''); } catch {} return normaliseState((Number(stored && stored.updatedAt) || 0) > (Number(embedded && embedded.updatedAt) || 0) ? stored : embedded); }
+    function serialiseState(value) { return JSON.stringify(value).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026'); }
+    function saveLocalState() { dom.embedded.textContent = serialiseState(state); try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {} }
+    function rebuildIndex() { searchIndex = new Map(state.questions.map(function(question) { return [question.id, normaliseText(question.prompt + ' ' + question.answer + ' ' + question.topic + ' ' + question.status)]; })); }
+    function publishState(message) { state.updatedAt = Date.now(); saveLocalState(); document.dispatchEvent(new CustomEvent('ag-quizlet:change', { detail: { questionCount: state.questions.length, updatedAt: state.updatedAt } })); if (message) showToast(message); }
+    async function requestSharedQuestionBank(method, body) {
+      const options = { method: method, headers: { Accept: 'application/json' }, cache: 'no-store' };
+      if (body !== undefined) { options.headers['Content-Type'] = 'application/json'; options.body = JSON.stringify(body); }
+      const response = await fetch(QUESTION_API, options);
+      const payload = await response.json().catch(function() { return null; });
+      if (!response.ok || !payload) throw new Error((payload && payload.error) || 'Shared question storage is unavailable.');
+      return payload;
+    }
+    function applySharedQuestionBank(bank, etag) {
+      const questions = Array.isArray(bank && bank.questions) ? bank.questions.map(normaliseQuestion).filter(Boolean) : [];
+      state.questions = questions;
+      ['favoriteIds', 'reviewIds', 'masteredIds', 'sprintIds'].forEach(function(key) { state[key] = normaliseIds(state[key], questions); });
+      remoteQuestionUpdatedAt = Number(bank && bank.updatedAt) || Date.now(); remoteQuestionETag = etag || '';
+      rebuildIndex(); saveLocalState(); render();
+    }
+    async function refreshSharedQuestionBank(initial) {
+      const result = await requestSharedQuestionBank('GET');
+      if (!result.exists) {
+        if (!initial) return;
+        const bootstrap = await requestSharedQuestionBank('POST', { action: 'bootstrap', questions: state.questions });
+        applySharedQuestionBank(bootstrap.bank, bootstrap.etag); sharedQuestionsReady = true;
+        return;
+      }
+      const updatedAt = Number(result.bank && result.bank.updatedAt) || 0;
+      if (initial || result.etag !== remoteQuestionETag || updatedAt !== remoteQuestionUpdatedAt) applySharedQuestionBank(result.bank, result.etag);
+      sharedQuestionsReady = true;
+    }
+    async function connectSharedQuestionBank() {
+      try {
+        await refreshSharedQuestionBank(true);
+        if (sharedRefreshTimer) clearInterval(sharedRefreshTimer);
+        sharedRefreshTimer = setInterval(function() { if (!document.hidden) refreshSharedQuestionBank(false).catch(function() {}); }, SHARED_REFRESH_MS);
+        document.addEventListener('visibilitychange', function() { if (!document.hidden) refreshSharedQuestionBank(false).catch(function() {}); });
+      } catch (error) {
+        sharedQuestionsReady = false;
+        console.error(error);
+        showToast('تعذر الاتصال ببنك الأسئلة المشترك. تأكدوا من نشر ملفات Netlify كاملة.');
+      }
+    }
+    function requireSharedQuestionBank() { if (sharedQuestionsReady) return true; showToast('جاري الاتصال ببنك الأسئلة المشترك. حاولوا مرة أخرى بعد لحظات.'); return false; }
+    function showToast(message) { dom.toast.textContent = message; dom.toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function() { dom.toast.classList.remove('show'); }, 3200); }
+    function announce(message) { dom.live.textContent = ''; requestAnimationFrame(function() { dom.live.textContent = message; }); }
+    function setTheme() { document.documentElement.dataset.theme = state.theme; dom.theme.textContent = state.theme === 'night' ? '☼' : '◐'; dom.theme.setAttribute('aria-label', state.theme === 'night' ? 'تفعيل المظهر الفاتح' : 'تفعيل المظهر الليلي'); }
+    function publishedQuestions() { return state.questions.filter(function(question) { return question.status === 'published'; }); }
+    function topics() { return Array.from(new Set(DEFAULT_TOPICS.concat(state.questions.map(function(question) { return question.topic; })))).filter(Boolean).sort(function(a, b) { return a.localeCompare(b, 'ar'); }); }
+    function includesSet(key, id) { return state[key].includes(id); }
+    function toggleId(key, id) { const set = new Set(state[key]); if (set.has(id)) set.delete(id); else set.add(id); state[key] = Array.from(set); }
+    function selectQuestions() {
+      const query = normaliseText(ui.query); let questions = publishedQuestions().filter(function(question) {
+        if (query && !searchIndex.get(question.id).includes(query)) return false;
+        if (ui.topic !== 'all' && question.topic !== ui.topic) return false;
+        if (ui.collection === 'favorites' && !includesSet('favoriteIds', question.id)) return false;
+        if (ui.collection === 'review' && !includesSet('reviewIds', question.id)) return false;
+        if (ui.collection === 'mastered' && !includesSet('masteredIds', question.id)) return false;
+        if (ui.collection === 'sprint' && !includesSet('sprintIds', question.id)) return false;
+        return true;
+      });
+      if (ui.sort === 'topic') questions = questions.slice().sort(function(a,b) { return a.topic.localeCompare(b.topic, 'ar') || a.prompt.localeCompare(b.prompt, 'ar'); });
+      if (ui.sort === 'newest') questions = questions.slice().sort(function(a,b) { return (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0); });
+      return questions;
+    }
+    function selectBankQuestions() { const query = normaliseText(ui.bankQuery); return state.questions.filter(function(question) { return !query || searchIndex.get(question.id).includes(query); }); }
+    function renderTopicOptions() { const current = ui.topic; const fragment = document.createDocumentFragment(); const all = document.createElement('option'); all.value = 'all'; all.textContent = 'كل التصنيفات'; fragment.appendChild(all); topics().forEach(function(topic) { const option = document.createElement('option'); option.value = topic; option.textContent = topic; fragment.appendChild(option); }); dom.topic.replaceChildren(fragment); ui.topic = topics().includes(current) || current === 'all' ? current : 'all'; dom.topic.value = ui.topic; }
+    function filterDefinition() { return [{ id: 'all', label: 'كل الأسئلة', count: publishedQuestions().length }, { id: 'favorites', label: 'المفضلة', count: state.favoriteIds.length }, { id: 'review', label: 'للمراجعة', count: state.reviewIds.length }, { id: 'mastered', label: 'أتقنتها', count: state.masteredIds.length }, { id: 'sprint', label: 'جلسة التركيز', count: state.sprintIds.length }]; }
+    function renderFilters() { const fragment = document.createDocumentFragment(); const label = textNode('span', 'shelf-label', 'SMART SHELVES'); fragment.appendChild(label); filterDefinition().forEach(function(filter) { const button = textNode('button', 'filter' + (ui.collection === filter.id ? ' active' : ''), filter.label); button.type = 'button'; button.dataset.collection = filter.id; const count = textNode('span', 'filter-count', String(filter.count)); button.appendChild(count); button.addEventListener('click', function() { if (filter.id === 'sprint' && !state.sprintIds.length) { showToast('ابدأوا جلسة تركيز أولاً لإنشاء قائمة عشوائية.'); return; } ui.collection = filter.id; ui.libraryPage = 0; renderLibrary(); }); fragment.appendChild(button); }); dom.filters.replaceChildren(fragment); }
+    function renderMetrics() { const published = publishedQuestions(); dom.questionCount.textContent = String(published.length); dom.metricTotal.textContent = String(published.length); dom.metricFavorites.textContent = String(state.favoriteIds.length); dom.metricReview.textContent = String(state.reviewIds.length); dom.metricMastered.textContent = String(state.masteredIds.length); }
+    function iconButton(symbol, label, activeClass, active, onClick) { const button = textNode('button', 'card-icon' + (active ? ' ' + activeClass : ''), symbol); button.type = 'button'; button.setAttribute('aria-label', label); button.title = label; button.addEventListener('click', onClick); return button; }
+    function renderCard(question, number) {
+      const card = textNode('article', 'qa-card'); const main = textNode('div', 'card-main'); const head = textNode('div', 'card-head'); const left = textNode('div', ''); left.append(textNode('span', 'badge', '#' + number), textNode('span', 'topic', question.topic)); const icons = textNode('div', 'card-icons');
+      icons.append(
+        iconButton('★', includesSet('favoriteIds', question.id) ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة', 'active', includesSet('favoriteIds', question.id), function() { toggleId('favoriteIds', question.id); publishState('تم تحديث المفضلة.'); renderLibrary(); }),
+        iconButton('◉', includesSet('reviewIds', question.id) ? 'إزالة من قائمة المراجعة' : 'إضافة إلى قائمة المراجعة', 'review-active', includesSet('reviewIds', question.id), function() { toggleId('reviewIds', question.id); publishState('تم تحديث قائمة المراجعة.'); renderLibrary(); }),
+        iconButton('✓', includesSet('masteredIds', question.id) ? 'إزالة حالة الإتقان' : 'تسجيل كمتقن', 'mastered-active', includesSet('masteredIds', question.id), function() { toggleId('masteredIds', question.id); if (includesSet('masteredIds', question.id)) state.reviewIds = state.reviewIds.filter(function(id) { return id !== question.id; }); publishState(includesSet('masteredIds', question.id) ? 'ممتاز، تم تسجيل السؤال كمتقن.' : 'تمت إزالة حالة الإتقان.'); renderLibrary(); })
+      );
+      head.append(left, icons); main.append(head, textNode('h2', '', question.prompt)); const answerBlock = textNode('div', 'answer-block'); answerBlock.append(textNode('span', 'answer-label', 'APPROVED ANSWER · الإجابة المعتمدة'), textNode('div', 'answer-text', question.answer)); const footer = textNode('footer', 'card-footer'); footer.append(textNode('span', '', 'آخر تحديث: ' + formatDate(question.updatedAt || question.createdAt)), textNode('span', includesSet('masteredIds', question.id) ? 'mastered-label' : '', includesSet('masteredIds', question.id) ? '✓ أتقنتها' : question.status === 'draft' ? 'مسودة' : 'محتوى معتمد')); card.append(main, answerBlock, footer); return card;
+    }
+    function renderLibrary() {
+      renderTopicOptions(); renderFilters(); renderMetrics(); const questions = selectQuestions(); const pages = Math.max(1, Math.ceil(questions.length / PAGE_SIZE)); ui.libraryPage = Math.min(ui.libraryPage, pages - 1); const start = ui.libraryPage * PAGE_SIZE; const page = questions.slice(start, start + PAGE_SIZE);
+      dom.qaGrid.replaceChildren(); dom.empty.classList.toggle('hidden', questions.length > 0); dom.pagination.classList.toggle('hidden', questions.length === 0); if (page.length) { const fragment = document.createDocumentFragment(); page.forEach(function(question, index) { fragment.appendChild(renderCard(question, start + index + 1)); }); dom.qaGrid.appendChild(fragment); }
+      dom.resultSummary.replaceChildren('عرض ', textNode('b', '', String(questions.length)), ' بطاقة معرفة مع الإجابة المباشرة.'); dom.paginationInfo.replaceChildren('عرض ', textNode('b', '', String(questions.length ? start + 1 : 0)), '–', textNode('b', '', String(Math.min(start + PAGE_SIZE, questions.length))), ' من ', textNode('b', '', String(questions.length))); dom.previous.disabled = ui.libraryPage === 0; dom.next.disabled = ui.libraryPage >= pages - 1;
+      const sprintActive = ui.collection === 'sprint'; dom.sprintBanner.classList.toggle('hidden', !sprintActive); if (sprintActive) dom.sprintCopy.textContent = 'لديكم ' + questions.length + ' بطاقات عشوائية في هذه الجلسة. استخدموا ✓ بعد إتقان كل بطاقة.';
+    }
+    function renderBankItem(question, number) { const row = textNode('article', 'bank-item'); const body = textNode('div', ''); body.append(textNode('h3', '', question.prompt), textNode('p', '', question.topic + ' · ' + (question.status === 'published' ? 'منشور' : 'مسودة') + ' · ' + formatDate(question.updatedAt || question.createdAt))); const actions = textNode('div', 'bank-actions'); const edit = textNode('button', 'mini', '✎'); edit.type = 'button'; edit.setAttribute('aria-label', 'تعديل السؤال ' + question.prompt); edit.addEventListener('click', function() { editQuestion(question.id); }); const remove = textNode('button', 'mini delete', '×'); remove.type = 'button'; remove.setAttribute('aria-label', 'حذف السؤال ' + question.prompt); remove.addEventListener('click', function() { removeQuestion(question.id); }); actions.append(edit, remove); row.append(textNode('span', 'bank-number', '#' + number), body, actions); return row; }
+    function renderBank() { const questions = selectBankQuestions(); const pages = Math.max(1, Math.ceil(questions.length / PAGE_SIZE)); ui.bankPage = Math.min(ui.bankPage, pages - 1); const start = ui.bankPage * PAGE_SIZE; const page = questions.slice(start, start + PAGE_SIZE); dom.bankItems.replaceChildren(); if (page.length) { const fragment = document.createDocumentFragment(); page.forEach(function(question, index) { fragment.appendChild(renderBankItem(question, start + index + 1)); }); dom.bankItems.appendChild(fragment); } else { const empty = textNode('div', 'empty'); empty.append(textNode('div', '', 'لا توجد نتائج مطابقة.')); dom.bankItems.appendChild(empty); } dom.bankCount.textContent = String(questions.length); dom.bankSummary.textContent = questions.length ? 'أسئلة قابلة للتعديل والحذف.' : 'لا توجد نتائج مطابقة.'; dom.bankPagination.classList.toggle('hidden', questions.length === 0); dom.bankPaginationInfo.replaceChildren('عرض ', textNode('b', '', String(questions.length ? start + 1 : 0)), '–', textNode('b', '', String(Math.min(start + PAGE_SIZE, questions.length))), ' من ', textNode('b', '', String(questions.length))); dom.bankPrevious.disabled = ui.bankPage === 0; dom.bankNext.disabled = ui.bankPage >= pages - 1; }
+    function render() { dom.library.classList.toggle('hidden', ui.view !== 'library'); dom.bank.classList.toggle('hidden', ui.view !== 'bank'); dom.nav.forEach(function(button) { const active = button.dataset.view === ui.view; button.classList.toggle('active', active); button.setAttribute('aria-current', active ? 'page' : 'false'); }); if (ui.view === 'library') renderLibrary(); else renderBank(); }
+    function setView(view) { ui.view = view; render(); if (typeof window.scrollTo === 'function') window.scrollTo({ top: 0, behavior: 'smooth' }); if (view === 'bank') setTimeout(function() { dom.prompt.focus(); }, 60); }
+    function startSprint() { const pool = publishedQuestions().filter(function(question) { return !includesSet('masteredIds', question.id); }); const shuffled = pool.slice().sort(function() { return Math.random() - .5; }); state.sprintIds = shuffled.slice(0, Math.min(10, shuffled.length)).map(function(question) { return question.id; }); if (!state.sprintIds.length) { showToast('كل الأسئلة المنشورة مسجلة كمتقنة. أحسنتم!'); return; } ui.collection = 'sprint'; ui.libraryPage = 0; publishState('بدأت جلسة تركيز من ' + state.sprintIds.length + ' بطاقات.'); renderLibrary(); }
+    function clearEditor() { dom.form.reset(); dom.editing.value = ''; dom.formError.textContent = ''; dom.editorTitle.textContent = 'إضافة سؤال وجواب'; dom.editorSubtitle.textContent = 'أضيفوا سؤالاً واضحاً وإجابته المعتمدة ليظهر في AG Quizlet.'; dom.saveQuestion.textContent = 'حفظ السؤال'; dom.status.value = 'published'; }
+    function editQuestion(id) { const question = state.questions.find(function(item) { return item.id === id; }); if (!question) return; dom.editing.value = question.id; dom.prompt.value = question.prompt; dom.answer.value = question.answer; dom.questionTopic.value = question.topic; dom.status.value = question.status; dom.formError.textContent = ''; dom.editorTitle.textContent = 'تعديل السؤال'; dom.editorSubtitle.textContent = 'حدّثوا المحتوى ثم احفظوا التعديل.'; dom.saveQuestion.textContent = 'حفظ التعديل'; dom.prompt.focus(); const editor = document.querySelector('.editor'); if (editor && typeof editor.scrollIntoView === 'function') editor.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    async function removeQuestion(id) {
+      const question = state.questions.find(function(item) { return item.id === id; });
+      if (!question || !window.confirm('هل تريدون حذف هذا السؤال من بنك الأسئلة؟') || !requireSharedQuestionBank()) return;
+      try {
+        const result = await requestSharedQuestionBank('POST', { action: 'delete', id: id });
+        applySharedQuestionBank(result.bank, result.etag);
+        if (dom.editing.value === id) clearEditor();
+        showToast('تم حذف السؤال من بنك الأسئلة المشترك.'); announce('تم حذف السؤال بنجاح.');
+      } catch (error) { console.error(error); showToast('تعذر حذف السؤال. حاولوا مرة أخرى.'); }
+    }
+    async function saveQuestion(event) {
+      event.preventDefault();
+      const prompt = clean(dom.prompt.value, ''); const answer = clean(dom.answer.value, ''); const topic = clean(dom.questionTopic.value, 'عام'); const status = dom.status.value === 'draft' ? 'draft' : 'published';
+      if (!prompt || !answer) { dom.formError.textContent = 'أدخلوا السؤال والإجابة قبل الحفظ.'; return; }
+      if (!requireSharedQuestionBank()) { dom.formError.textContent = 'جاري الاتصال بالتخزين المشترك. حاولوا مرة أخرى بعد لحظات.'; return; }
+      const id = dom.editing.value;
+      dom.formError.textContent = ''; dom.saveQuestion.disabled = true;
+      try {
+        const result = await requestSharedQuestionBank('POST', { action: id ? 'update' : 'add', question: { id: id, prompt: prompt, answer: answer, topic: topic, status: status } });
+        ui.bankPage = 0; applySharedQuestionBank(result.bank, result.etag); clearEditor();
+        showToast(id ? 'تم حفظ التعديل في بنك الأسئلة المشترك.' : (status === 'published' ? 'تمت إضافة السؤال إلى بنك الأسئلة المشترك.' : 'تم حفظ السؤال كمسودة مشتركة.'));
+        announce('تم حفظ السؤال بنجاح.');
+      } catch (error) { console.error(error); dom.formError.textContent = 'تعذر حفظ السؤال للجميع. تحققوا من الاتصال ثم حاولوا مرة أخرى.'; }
+      finally { dom.saveQuestion.disabled = false; }
+    }
+    function backup() { const content = JSON.stringify({ exportedAt: new Date().toISOString(), questions: state.questions }, null, 2); const blob = new Blob([content], { type: 'application/json;charset=utf-8' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'AG_Quizlet_Question_Bank.json'; document.body.appendChild(link); link.click(); link.remove(); setTimeout(function() { URL.revokeObjectURL(url); }, 0); showToast('تم تجهيز نسخة JSON من بنك الأسئلة.'); }
+    function debounceLibrarySearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function() { ui.query = dom.globalSearch.value; if (ui.query.trim()) ui.collection = 'all'; ui.libraryPage = 0; renderLibrary(); }, 120); }
+    function debounceBankSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(function() { ui.bankQuery = dom.bankSearch.value; ui.bankPage = 0; renderBank(); }, 120); }
+    function bindEvents() {
+      dom.nav.forEach(function(button) { button.addEventListener('click', function() { setView(button.dataset.view); }); }); dom.goToBank.addEventListener('click', function() { setView('bank'); }); dom.focusSprint.addEventListener('click', startSprint); dom.endSprint.addEventListener('click', function() { ui.collection = 'all'; renderLibrary(); }); dom.globalSearch.addEventListener('input', debounceLibrarySearch); dom.topic.addEventListener('change', function() { ui.topic = dom.topic.value; ui.libraryPage = 0; renderLibrary(); }); dom.sort.addEventListener('change', function() { ui.sort = dom.sort.value; ui.libraryPage = 0; renderLibrary(); }); dom.clearFilters.addEventListener('click', function() { ui.collection = 'all'; ui.query = ''; ui.topic = 'all'; ui.sort = 'default'; dom.globalSearch.value = ''; dom.sort.value = 'default'; ui.libraryPage = 0; renderLibrary(); }); dom.previous.addEventListener('click', function() { ui.libraryPage = Math.max(0, ui.libraryPage - 1); renderLibrary(); }); dom.next.addEventListener('click', function() { ui.libraryPage += 1; renderLibrary(); }); dom.bankSearch.addEventListener('input', debounceBankSearch); dom.bankPrevious.addEventListener('click', function() { ui.bankPage = Math.max(0, ui.bankPage - 1); renderBank(); }); dom.bankNext.addEventListener('click', function() { ui.bankPage += 1; renderBank(); }); dom.form.addEventListener('submit', saveQuestion); dom.clearForm.addEventListener('click', clearEditor); dom.backup.addEventListener('click', backup); dom.theme.addEventListener('click', function() { state.theme = state.theme === 'night' ? 'light' : 'night'; setTheme(); publishState('تم تحديث المظهر.'); }); document.addEventListener('keydown', function(event) { if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); setView('library'); dom.globalSearch.focus(); } });
+    }
+    async function importSharedQuestions(records) {
+      if (!Array.isArray(records)) throw new TypeError('AGQuizlet.importQuestions expects an array.');
+      if (!requireSharedQuestionBank()) throw new Error('Shared question storage is not ready.');
+      const result = await requestSharedQuestionBank('POST', { action: 'replace', questions: records });
+      state.favoriteIds = []; state.reviewIds = []; state.masteredIds = []; state.sprintIds = [];
+      applySharedQuestionBank(result.bank, result.etag); publishState('تم استيراد بنك الأسئلة المشترك.');
+    }
+    async function initialise() {
+      state = loadState(); rebuildIndex(); setTheme(); saveLocalState(); bindEvents(); render();
+      window.AGQuizlet = Object.freeze({ getQuestions: function() { return clone(state.questions); }, exportQuestions: function() { return JSON.stringify(state.questions); }, importQuestions: importSharedQuestions });
+      await connectSharedQuestionBank();
+    }
+    initialise();
+  </script>
+</body>
+</html>
